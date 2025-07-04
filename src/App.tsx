@@ -1,83 +1,104 @@
-import './App.css';
-import Apply from './components/Apply';
-import DetailsOfJob from './Pages/DetailsOfJob';
-import Explore from './Pages/Explore';
-import Header from './components/Header';
-import Login from './Pages/Login';
-import Navbar from './components/Navbar';
-import PopularCategory from './components/PopularCategory';
-import PromotedCompanies from './components/PromotedCompanies';
-import {  Routes, Route } from 'react-router-dom';
-import Signup from './Pages/Signup';
-import PostJob from "./Pages/PostJob"
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import AdvanceSearch from './components/AdvanceSearch';
-import Footer from './components/Footer';
-
+import { Route, Routes, useNavigate  } from "react-router-dom";
+import "./App.css";
+import AdvanceSearch from "./components/AdvanceSearch";
+import Apply from "./components/Apply";
+import PostJob from "./Pages/Recruiter/PostJob";
+import DetailsOfJob from "./Pages/Seeker/DetailsOfJob";
+import Explore from "./Pages/Seeker/Explore";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import AuthLayout from "./outlet/AuthLayout";
+import MainLayout from "./outlet/MainLayout";
+import RecruterOutlet from "./outlet/RecruterOutlet";
+import ProtectedRoute from "./Pages/Auth/ProtectedRoute";
+import Inbox from "./Pages/Recruiter/Inbox";
+import JobList from "./Pages/Recruiter/JobList";
+import Profile from "./Pages/Recruiter/Profile";
+import TaskManagement from "./Pages/Recruiter/TaskManagement";
+import LandingPage from "./Pages/Seeker/LandingPage";
+import Homepage from "./Pages/Seeker/landingpage2";
+import ProfileSeeker from "./Pages/Seeker/SeekerProfile";
+import UserDetails from "./Pages/Seeker/UserDetails";
+import Category from "./Job Category/Category";
+import Notification from "./components/Notificaton";
 
 function App() {
-const [user,setUser]=useState(null)
-// const navigate=useNavigate()
+  const navigate = useNavigate();
+  const [user, setUser] = useState();
+  console.log("user",user)
 
-
-   useEffect(() => {
+useEffect(() => {
+    const verify = async () => {
       const token = localStorage.getItem("token");
-    
-      const verify = async () => {
-        try {
-          const response = await axios.post("http://localhost:3001/verify", {}, {
+
+      if (!token) {
+        console.error("No token found");
+        navigate("/");  
+        return;
+      }
+
+      try {
+        const response = await axios.post(
+          "http://localhost:3001/verify",
+        
+          {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          });
-          console.log(response.data)
-          
-        
+          }
+        );
 
-          setUser(response?.data?.user)
-        } catch (err) {
-          console.log(err);
+        if (response?.data?.user) {
+          setUser(response.data.user);
+          navigate("/homepage"); 
+        } else {
+          console.error("User data missing in response");
+          navigate("/");
         }
-      };
-      
-      verify();
 
-    }, []);
-    console.log(user)
-   
+      } catch (err) {
+        console.error("Verification failed:", err.response?.data || err.message);
+        navigate("/");
+      }
+    };
+
+    verify();
+  }, []);
+
 
   return (
-    
-    <>
-    
-    <Navbar user={user} />
-      
-      <Routes>
-        <Route path="/login" element={<Login/>}/>
-        <Route path="/signup" element={<Signup/>}/>
+    <Routes>
+      <Route element={<AuthLayout />}></Route>
+
+      <Route element={<MainLayout user={user} />}>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/homepage" element={<Homepage />} />
+         <Route path="/note" element={<Notification />} />
         <Route path="/explore" element={<Explore />} />
-        <Route path="/details/:id" element={<DetailsOfJob/>}/>
-        <Route path='/apply/:id' element={<Apply/>}/>
-        <Route path='/PostJob' element={<PostJob/>}/>
-        <Route path='/advancesearch' element={<AdvanceSearch/>}/>
+        <Route path="/details/:_id" element={<DetailsOfJob />} />
+        <Route path="/advancesearch" element={<AdvanceSearch />} />
+        <Route path="/apply/:_id" element={<Apply />} />
+        <Route path="/profileseeker" element={<ProfileSeeker />} />
+        <Route path="/userdetails" element={<UserDetails />} />
+        <Route path="/category/:path" element={<Category />} />
+      </Route>
+
+      <Route element={<RecruterOutlet />}>
         <Route
-          path="/"
+          path="/TaskManagement"
           element={
-            <>
-              <Header />
-              <PopularCategory />
-              <PromotedCompanies />
-              
-          
-            </>
-            
+            <ProtectedRoute>
+              <TaskManagement />
+            </ProtectedRoute>
           }
         />
-      </Routes>
-      <Footer/>
-    </>
-    
+        <Route path="/addjob" element={<PostJob />} />
+        <Route path="/joblist" element={<JobList />} />
+        {/* <Route path="/edit/:id" element={<Buttoncomponent />} /> */}
+        <Route path="/inbox" element={<Inbox />} />
+        <Route path="/profile" element={<Profile />} />
+      </Route>
+    </Routes>
   );
 }
 

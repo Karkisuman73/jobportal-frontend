@@ -1,3 +1,4 @@
+import { Keyboard } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -9,6 +10,8 @@ const Search = () => {
     if (query.trim()) {
       navigate(`/explore?q=${encodeURIComponent(query)}`);
     }
+  
+  
   };
 
   return (
@@ -19,6 +22,7 @@ const Search = () => {
           type="text"
           placeholder="What are you looking for?"
           onChange={(e) => setQuery(e.target.value)}
+          onKeyUp={handleSearch}
         />
         <input
           className="p-3 focus:outline-none border-l-2 w-40"
@@ -26,7 +30,7 @@ const Search = () => {
           placeholder="Enter location"
         />
         <button
-          onClick={handleSearch}
+          // onClick={handleSearch}
           className="bg-black text-amber-50 pl-3 h-10 mt-1 pr-3 rounded-2xl mr-2"
         >
           Search

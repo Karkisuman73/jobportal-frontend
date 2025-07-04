@@ -16,40 +16,50 @@ interface TypeData {
 }
 export const data: TypeData[] = [
   {
-    name: "Finance",
-    overview: "Facilitating and improving the financial practices.",
+    name: "Finance & Accounting",
+    // overview: "Facilitating and improving the financial practices.",
     Icon: FaCircleDollarToSlot ,
   },
   {
-    name: "Marketing",
-    overview: "Facilitating and improving the marketing practices.",
+    name: "Sales & Marketing",
+    // overview: "Facilitating and improving the marketing practices.",
     Icon: HiSpeakerphone,
   },
   {
-    name: "It Services",
-    overview: "Facilitating and improving the it services practices.",
+    name: "It Service",
+    // overview: "Facilitating and improving the it services practices.",
     Icon: FaComputer,
   },
   {
-    name: "Science",
-    overview: "Facilitating and improving the science practices.",
+    name: "Education",
+    // overview: "Facilitating and improving the science practices.",
     Icon: GiMaterialsScience,
   },
   {
-    name: "Tech",
-    overview: "Facilitating and improving the tech practices.",
+    name: "Customer Service",
+    // overview: "Facilitating and improving the tech practices.",
     Icon: DiTechcrunch,
   },
   {
-    name: "Gastronomy",
-    overview: "Facilitating and improving the gastronomy practices.",
+    name: "Skilled Trades & Construction",
+    // overview: "Facilitating and improving the gastronomy practices.",
     Icon:MdFoodBank ,
   },
   {
-    name: "Sales",
-    overview: "Facilitating and improving the sales practices.",
+    name: "Project Management",
+    // overview: "Facilitating and improving the sales practices.",
     Icon: FcSalesPerformance,
   },
+  {
+    name: "Human Resources",
+    // overview: "Facilitating and improving the sales practices.",
+    Icon: FcSalesPerformance,
+  },
+  {
+    name: "Health & Care",
+    // overview: "Facilitating and improving the sales practices.",
+    Icon: FcSalesPerformance,
+  }
 ];
 
 // Promoted Companies
