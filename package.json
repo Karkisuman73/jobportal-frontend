@@ -24,6 +24,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dom-to-image": "^2.2.1",
+    "dotenv": "^17.1.0",
     "framer-motion": "^12.12.1",
     "html2canvas": "^1.4.1",
     "jspdf": "^3.0.1",
