@@ -1,12 +1,12 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import  { useState, ChangeEvent } from "react";
+} from "@/components/ui/dialog";
+import { useState, ChangeEvent } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -17,9 +17,8 @@ interface SignupData {
   role: string;
 }
 
-
- function Signup() {
-     const [save, setSave] = useState<SignupData>({
+function Signup() {
+  const [save, setSave] = useState<SignupData>({
     username: "",
     email: "",
     password: "",
@@ -30,19 +29,18 @@ interface SignupData {
     setSave({ ...save, [e.target.name]: e.target.value });
   };
 
-  const handleSignup = async (e:React.FormEvent<HTMLFormElement>) => {
+  const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:3001/add", save);
+      const API_URL = process.env.REACT_APP_API_URL;
+      const response = await axios.post(`${API_URL}/add`, save);
       console.log(response);
       toast.success("Signup successful");
-    } catch (e:any) {
+    } catch (e: any) {
       toast.error(e.response?.data?.message || "Signup unsuccessful");
       console.error(e);
     }
   };
-
- 
 
   return (
     <Dialog>
@@ -52,12 +50,13 @@ interface SignupData {
       <DialogContent className="sm:max-w-[425px] transition-all duration-300">
         <DialogHeader>
           <DialogTitle className="text-center">Signup Form</DialogTitle>
-          
         </DialogHeader>
         {/* Signup form */}
- <form onSubmit={handleSignup}>
+        <form onSubmit={handleSignup}>
           <div className="mb-4">
-            <label className="block mb-1 font-medium text-gray-700">Username</label>
+            <label className="block mb-1 font-medium text-gray-700">
+              Username
+            </label>
             <input
               type="text"
               name="username"
@@ -70,7 +69,9 @@ interface SignupData {
           </div>
 
           <div className="mb-4">
-            <label className="block mb-1 font-medium text-gray-700">Email</label>
+            <label className="block mb-1 font-medium text-gray-700">
+              Email
+            </label>
             <input
               type="email"
               name="email"
@@ -83,7 +84,9 @@ interface SignupData {
           </div>
 
           <div className="mb-4">
-            <label className="block mb-1 font-medium text-gray-700">Select Role</label>
+            <label className="block mb-1 font-medium text-gray-700">
+              Select Role
+            </label>
             <select
               name="role"
               onChange={handleInfo}
@@ -98,7 +101,9 @@ interface SignupData {
           </div>
 
           <div className="mb-6">
-            <label className="block mb-1 font-medium text-gray-700">Password</label>
+            <label className="block mb-1 font-medium text-gray-700">
+              Password
+            </label>
             <input
               type="password"
               name="password"
@@ -118,10 +123,9 @@ interface SignupData {
           </button>
         </form>
 
-       
         {/* Signuo FOrm */}
       </DialogContent>
     </Dialog>
-  )
+  );
 }
-export default Signup
+export default Signup;

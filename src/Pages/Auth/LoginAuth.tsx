@@ -40,7 +40,8 @@ function Login() {
   const handleLogin = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:3001/login", save);
+      const API_URL = process.env.REACT_APP_API_URL;
+      const response = await axios.post(`${API_URL}/login`, save);
       toast.success("Login successful");
 
       const { token, role, username, email, _id, name } = response.data;

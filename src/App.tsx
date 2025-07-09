@@ -34,8 +34,10 @@ function App() {
       }
 
       try {
+        const API_URL = process.env.REACT_APP_API_URL;
+
         const response = await axios.post(
-          "http://localhost:3001/verify",
+          `${API_URL}/verify`,
           {},
           {
             headers: {
