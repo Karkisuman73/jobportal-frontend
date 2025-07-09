@@ -1,9 +1,9 @@
 import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
@@ -15,22 +15,31 @@ import { useState } from "react";
 type Inputs = {
   image: FileList;
 };
+
+interface DecodedToken {
+  id: string;
+}
+
 export function Upload() {
+  const { register, setValue } = useForm<Inputs>();
+  const [showbox, setShowbox] = useState(false);
 
-    const {
-    register,
-    setValue,
-    formState: { errors },
-  } = useForm<Inputs>();
-const[showbox,setShowbox]=useState(false)
-  const token= localStorage.getItem("token")
-  console.log("token",token)
-  const decode=jwtDecode(token)
-  const userId= decode.id
-  // console.log("UserID",userId)
-  
+  const token = localStorage.getItem("token");
 
-   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  let userId = "";
+
+  if (token) {
+    try {
+      const decoded = jwtDecode<DecodedToken>(token);
+      userId = decoded.id;
+    } catch (error) {
+      console.error("Invalid token", error);
+    }
+  } else {
+    userId = "";
+  }
+
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const fileList = e.target.files;
     if (fileList && fileList.length > 0) {
       const file = fileList[0];
@@ -38,10 +47,10 @@ const[showbox,setShowbox]=useState(false)
 
       const profileData = new FormData();
       profileData.append("image", file);
-      profileData.append("userId",userId)
+      profileData.append("userId", userId);
       console.log("Uploaded file:", file);
 
-  try {
+      try {
         const response = await axios.post(
           "http://localhost:3001/seekerprofile",
           profileData,
@@ -51,40 +60,47 @@ const[showbox,setShowbox]=useState(false)
         );
         console.log("response", response.data);
         toast.success("Image upload successful");
-        setShowbox(false)
+        setShowbox(false);
       } catch (e) {
         console.log(e);
+        toast.error("Image upload failed");
       }
     }
   };
+
   return (
     <Dialog open={showbox} onOpenChange={setShowbox}>
       <DialogTrigger asChild>
-        <button onClick={()=>setShowbox(true)} className="items-left text-left gap-2 rounded-sm px-2 py-1.5 w-80 text-sm outline-hidden hover:bg-gray-100">Upload profile</button>
+        <button
+          onClick={() => setShowbox(true)}
+          className="items-left text-left gap-2 rounded-sm px-2 py-1.5 w-80 text-sm outline-hidden hover:bg-gray-100"
+        >
+          Upload profile
+        </button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle className="text-center">Upload Profile Photo</DialogTitle>
-          
+          <DialogTitle className="text-center">
+            Upload Profile Photo
+          </DialogTitle>
         </DialogHeader>
-<>
-    <button>
-    <div >
-      <label htmlFor="image" ><GrFormUpload color="black" size={80} className="ml-35"/>
-      </label>
-      {/* <form> */}
-       <input
-          type="file"
-          id="image"
-          className="hidden"
-          {...register("image")}
-          onChange={handleImageChange}
-        /> 
-      </div>
-      </button>
-      
-   </>
+        <div>
+          <label htmlFor="image">
+            <GrFormUpload
+              color="black"
+              size={80}
+              className="ml-35 cursor-pointer"
+            />
+          </label>
+          <input
+            type="file"
+            id="image"
+            className="hidden"
+            {...register("image")}
+            onChange={handleImageChange}
+          />
+        </div>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

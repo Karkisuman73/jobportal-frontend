@@ -14,6 +14,10 @@ import { toast } from "react-toastify";
 import { Upload } from "./Upload";
 import { jwtDecode } from "jwt-decode";
 
+interface DecodedToken {
+  id: string;
+}
+
 function ProfileImage() {
   const { data: profile } = useFetchJobs("/SeekerProfile");
   console.log("profile", profile);
@@ -21,8 +25,17 @@ function ProfileImage() {
   const navigate = useNavigate();
 
   const token = localStorage.getItem("token");
-  const { id: userId } = jwtDecode(token);
-  console.log(userId);
+
+  let userId: string | null = null;
+
+  if (token) {
+    try {
+      const decoded = jwtDecode<DecodedToken>(token);
+      userId = decoded.id;
+    } catch (error) {
+      console.error("Invalid token", error);
+    }
+  }
 
   const userPhoto = profile?.find((p: any) => p.userId === userId);
 
@@ -38,12 +51,18 @@ function ProfileImage() {
   const Information = () => {
     navigate("/userdetails");
   };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <div className="w-15 aspect-square rounded-full overflow-hidden border-2 border-amber-400">
           <img
-            src={profile && `${imageUrl}/${userPhoto?.image}`}
+            src={
+              profile && userPhoto
+                ? `${imageUrl}/${userPhoto.image}`
+                : undefined
+            }
+            alt="Profile"
             className="h-full w-full object-cover"
           />
         </div>
@@ -54,8 +73,7 @@ function ProfileImage() {
 
         <DropdownMenuItem onClick={Seekerprofile}>Profile</DropdownMenuItem>
 
-        <button >
-          {" "}
+        <button>
           <Upload />
         </button>
 
@@ -63,9 +81,10 @@ function ProfileImage() {
           Upload Information
         </DropdownMenuItem>
 
-        <DropdownMenuItem onClick={logout}>logout</DropdownMenuItem>
+        <DropdownMenuItem onClick={LogOut}>Logout</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
 }
+
 export default ProfileImage;

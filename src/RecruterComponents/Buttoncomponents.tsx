@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import useFetchJobs from "@/utils/useFetchJobs";
 import axios from "axios";
-import React, { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -28,12 +28,11 @@ interface JobData {
   responsibilities: string;
   requiredSkills: string;
   roleDescription: string;
-  category:string,
+  category: string;
   _id?: string;
 }
 
-function Buttoncomponent({id}) {
-  // const { id } = useParams();
+function Buttoncomponent({ id }: { id: string }) {
   const navigate = useNavigate();
   const { data } = useFetchJobs<JobData[]>("/joblist");
 
@@ -48,7 +47,7 @@ function Buttoncomponent({id}) {
     responsibilities: "",
     requiredSkills: "",
     roleDescription: "",
-    category:"",
+    category: "",
   });
 
   useEffect(() => {
@@ -59,8 +58,9 @@ function Buttoncomponent({id}) {
       }
     }
   }, [data, id]);
+
   const handleInfo = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     setSave({ ...save, [e.target.name]: e.target.value });
   };
@@ -84,64 +84,49 @@ function Buttoncomponent({id}) {
       <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Edit Job</DialogTitle>
-          <DialogDescription>
-            Update the job details and click save.
-          </DialogDescription>
-
-          <form
-            className="grid gap-4 py-4"
-            onSubmit={(e) => e.preventDefault()}
-          >
-       {[
-  { name: "position", label: "Position" },
-  { name: "companyname", label: "Company Name" },
-  { name: "level", label: "Level (Senior, Mid, Junior)" },
-  { name: "type", label: "Type (Onsite, Remote)" },
-  { name: "time", label: "Time (Part-time, Full-time)" },
-  { name: "category", label: "Category", type: "select" },
-].map((field) => (
-  <div key={field.name} className="grid gap-2">
-    <Label htmlFor={field.name}>{field.label}</Label>
-
-    {field.name === "category" ? (
-      <select
-        id={field.name}
-        name={field.name}
-        value={save.category}
-        onChange={handleInfo}
-        required
-        className="border border-gray-300 rounded-md p-2"
-      >
-       <option value="">Select..</option>
-              <option value="finance">Finance</option>
-              <option value="education">Education</option>
-              <option value="sales-marketing">Sales & Marketing</option>
-              <option value="it-service">It Service</option>
-              <option value="health-care">Health & Care</option>
-              <option value="skilled-trades-construction">
-                Skilled Trades & Construction
-              </option>
-              <option value="customer-service">Customer Service</option>
-              <option value="human-resources">Human Resources</option>
-              <option
-                value="project-management
-"
-              >
-                Project Management
-              </option>
-      </select>
-    ) : (
-      <Input
-        id={field.name}
-        name={field.name}
-        value={save[field.name as keyof JobData]}
-        onChange={handleInfo}
-        required
-      />
-    )}
-  </div>
-))}
-
+          <DialogDescription>Update the job details and click save.</DialogDescription>
+          <form className="grid gap-4 py-4" onSubmit={(e) => e.preventDefault()}>
+            {[
+              { name: "position", label: "Position" },
+              { name: "companyname", label: "Company Name" },
+              { name: "level", label: "Level (Senior, Mid, Junior)" },
+              { name: "type", label: "Type (Onsite, Remote)" },
+              { name: "time", label: "Time (Part-time, Full-time)" },
+              { name: "category", label: "Category", type: "select" },
+            ].map((field) => (
+              <div key={field.name} className="grid gap-2">
+                <Label htmlFor={field.name}>{field.label}</Label>
+                {field.name === "category" ? (
+                  <select
+                    id={field.name}
+                    name={field.name}
+                    value={save.category}
+                    onChange={handleInfo}
+                    required
+                    className="border border-gray-300 rounded-md p-2"
+                  >
+                    <option value="">Select..</option>
+                    <option value="finance">Finance</option>
+                    <option value="education">Education</option>
+                    <option value="sales-marketing">Sales & Marketing</option>
+                    <option value="it-service">It Service</option>
+                    <option value="health-care">Health & Care</option>
+                    <option value="skilled-trades-construction">Skilled Trades & Construction</option>
+                    <option value="customer-service">Customer Service</option>
+                    <option value="human-resources">Human Resources</option>
+                    <option value="project-management">Project Management</option>
+                  </select>
+                ) : (
+                  <Input
+                    id={field.name}
+                    name={field.name}
+                    value={save[field.name as keyof JobData] || ""}
+                    onChange={handleInfo}
+                    required
+                  />
+                )}
+              </div>
+            ))}
 
             {[
               { name: "view", label: "Overview", rows: 3 },
@@ -150,16 +135,13 @@ function Buttoncomponent({id}) {
               { name: "requiredSkills", label: "Required Skills", rows: 3 },
               { name: "roleDescription", label: "Role Description", rows: 3 },
             ].map((field) => (
-
-
-                
               <div key={field.name} className="grid gap-2">
                 <Label htmlFor={field.name}>{field.label}</Label>
                 <Textarea
                   id={field.name}
                   name={field.name}
                   rows={field.rows}
-                  value={save[field.name as keyof JobData]}
+                  value={save[field.name as keyof JobData] || ""}
                   onChange={handleInfo}
                   required
                 />

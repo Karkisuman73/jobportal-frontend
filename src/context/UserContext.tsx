@@ -11,15 +11,15 @@ import { useNavigate } from "react-router-dom";
 type User = {
   _id: string;
   name: string;
+  username: string;
   email: string;
-  
 };
 
 type UserContextType = {
   user: User | null;
   login: (userData: User) => void;
   logout: () => void;
-  userid:()=> string | null;
+  userid: () => string | null;
 };
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -51,14 +51,13 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
     navigate("/");
   };
 
-  const userid = ()=>{
-    const token= localStorage.getItem("token")
-     
-      const decode=jwtDecode(token)
-      const userId= decode.id
-      return userId
-     
-  }
+  const userid = () => {
+    const token = localStorage.getItem("token");
+
+    const decode = jwtDecode(token);
+    const userId = decode.id;
+    return userId;
+  };
 
   return (
     <UserContext.Provider value={{ user, login, logout, userid }}>

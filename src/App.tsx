@@ -1,4 +1,4 @@
-import { Route, Routes, useNavigate  } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import "./App.css";
 import AdvanceSearch from "./components/AdvanceSearch";
 import Apply from "./components/Apply";
@@ -24,23 +24,23 @@ import Notification from "./components/Notificaton";
 
 function App() {
   const navigate = useNavigate();
-  const [user, setUser] = useState();
-  console.log("user",user)
+  const [user, setUser] = useState<any>(); // you can replace `any` with your actual user type/interface
+  console.log("user", user);
 
-useEffect(() => {
+  useEffect(() => {
     const verify = async () => {
       const token = localStorage.getItem("token");
 
       if (!token) {
         console.error("No token found");
-        navigate("/");  
+        navigate("/");
         return;
       }
 
       try {
         const response = await axios.post(
           "http://localhost:3001/verify",
-        
+          {},
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -50,30 +50,37 @@ useEffect(() => {
 
         if (response?.data?.user) {
           setUser(response.data.user);
-          navigate("/homepage"); 
+          navigate("/homepage");
         } else {
           console.error("User data missing in response");
           navigate("/");
         }
-
-      } catch (err) {
-        console.error("Verification failed:", err.response?.data || err.message);
+      } catch (err: unknown) {
+        if (axios.isAxiosError(err)) {
+          console.error(
+            "Verification failed:",
+            err.response?.data || err.message
+          );
+        } else if (err instanceof Error) {
+          console.error("Verification failed:", err.message);
+        } else {
+          console.error("Verification failed with unknown error:", err);
+        }
         navigate("/");
       }
     };
 
     verify();
-  }, []);
-
+  }, [navigate]);
 
   return (
     <Routes>
-      <Route element={<AuthLayout />}></Route>
+      <Route element={<AuthLayout />} />
 
       <Route element={<MainLayout user={user} />}>
         <Route path="/" element={<LandingPage />} />
         <Route path="/homepage" element={<Homepage />} />
-         <Route path="/note" element={<Notification />} />
+        <Route path="/note" element={<Notification />} />
         <Route path="/explore" element={<Explore />} />
         <Route path="/details/:_id" element={<DetailsOfJob />} />
         <Route path="/advancesearch" element={<AdvanceSearch />} />
@@ -94,7 +101,6 @@ useEffect(() => {
         />
         <Route path="/addjob" element={<PostJob />} />
         <Route path="/joblist" element={<JobList />} />
-        {/* <Route path="/edit/:id" element={<Buttoncomponent />} /> */}
         <Route path="/inbox" element={<Inbox />} />
         <Route path="/profile" element={<Profile />} />
       </Route>

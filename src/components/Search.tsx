@@ -1,17 +1,14 @@
-import { Keyboard } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Search = () => {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const navigate = useNavigate();
 
   const handleSearch = () => {
     if (query.trim()) {
       navigate(`/explore?q=${encodeURIComponent(query)}`);
     }
-  
-  
   };
 
   return (

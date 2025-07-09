@@ -22,7 +22,8 @@ interface Form {
   formText: string;
   eligible: string;
   office: string;
-  cv:string
+  cv: string;
+  jobid: string; 
 }
 
 interface Props {
@@ -31,52 +32,40 @@ interface Props {
 
 function InboxComponent({ id }: Props) {
   const { data } = useFetchJobs<Form[]>("/userFormData");
-  // const {data:jobid}= useFetchJobs("/userFormData")
-
   const job = data?.find((job) => job._id === id);
-  const  aa=job?.jobid
-  console.log("..",aa)
+  const jobId = job?.jobid;
+  console.log("Job ID:", jobId);
 
-  const[showpdf,setShowpdf]=useState(false);
+  const [showPdf, setShowPdf] = useState(false);
 
-  const pdfopen=()=>{
- setShowpdf(true);
-  }
-  const pdfclose=()=>{
-    setShowpdf(false)
-  }
+  const openPdf = () => setShowPdf(true);
+  const closePdf = () => setShowPdf(false);
 
-  const handleClick=async(status:string)=>{
-    try{
-      if(!job?.email){
-        alert("User email not found")
+  const handleClick = async (status: string) => {
+    try {
+      if (!job?.email) {
+        alert("User email not found");
         return;
       }
-      const response=await axios.post(`http://localhost:3001/notification/${job.email}`,{
-        status: status,
-        Jobid:aa
-      })
-      toast.success(response.data.message)
 
-      if(status==="rejected"){
-        await axios.delete(`http://localhost:3001/deleteinbox/${id}`)
-      toast.success("Deleted from inbox")
-      setTimeout(() => {
-        window.location.reload()
-      }, 2000);
+      const response = await axios.post(`http://localhost:3001/notification/${job.email}`, {
+        status,
+        Jobid: jobId,
+      });
+      toast.success(response.data.message);
+
+      if (status === "rejected") {
+        await axios.delete(`http://localhost:3001/deleteinbox/${id}`);
+        toast.success("Deleted from inbox");
+        setTimeout(() => window.location.reload(), 2000);
       }
+    } catch (e) {
+      toast.error("An error occurred while sending the notification");
+      console.error(e);
     }
-    catch(e)
-    {
-      toast.error("Email not found")
-      console.log(e)
-    }
-
-  }
+  };
 
   return (
-   <>
-  
     <Dialog>
       <DialogTrigger asChild>
         <Button variant="outline">View</Button>
@@ -87,7 +76,7 @@ function InboxComponent({ id }: Props) {
         </DialogHeader>
 
         {job ? (
-          <div className=" grid gap-5 py-4">
+          <div className="grid gap-5 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
               <Label className="text-right">Name:</Label>
               <p className="col-span-3">{job.username}</p>
@@ -96,12 +85,10 @@ function InboxComponent({ id }: Props) {
               <Label className="text-right">Email:</Label>
               <p className="col-span-3">{job.email}</p>
             </div>
-           <div className="grid grid-cols-4 items-start gap-4">
-              <Label className="text-right mt-1">Contact number:</Label>
+            <div className="grid grid-cols-4 items-start gap-4">
+              <Label className="text-right mt-1">Contact Number:</Label>
               <p className="col-span-3">{job.number}</p>
-              
             </div>
-
             <div className="grid grid-cols-4 items-center gap-4">
               <Label className="text-right">LinkedIn Profile:</Label>
               <p className="col-span-3 break-all">{job.link}</p>
@@ -118,35 +105,38 @@ function InboxComponent({ id }: Props) {
               <Label className="text-right mt-1">Commute Office:</Label>
               <p className="col-span-3">{job.office}</p>
             </div>
-           
             <div className="grid grid-cols-4 items-start gap-4">
               <Label className="text-right mt-1">CV:</Label>
               <p
-                  className="col-span-3 text-blue-600 cursor-pointer hover:underline"
-                  onClick={pdfopen}
-                >
-                  View CV
-                </p>
+                className="col-span-3 text-blue-600 cursor-pointer hover:underline"
+                onClick={openPdf}
+              >
+                View CV
+              </p>
             </div>
-            <div className="flex justify-end gap-3 ">
-              <div><Button onClick={()=>handleClick("accepted")} className="border-2 border-black" variant="outline" >Accept</Button></div>
-             <div> <Button onClick={()=>handleClick("rejected")} className="border-2 border-black" variant="outline">Reject</Button></div>
+            <div className="flex justify-end gap-3">
+              <Button
+                onClick={() => handleClick("accepted")}
+                className="border-2 border-black"
+                variant="outline"
+              >
+                Accept
+              </Button>
+              <Button
+                onClick={() => handleClick("rejected")}
+                className="border-2 border-black"
+                variant="outline"
+              >
+                Reject
+              </Button>
             </div>
-            <div>
-                {showpdf && <PDFViewer cv={job?.cv} onClose={pdfclose}/>}
-            </div>
-          
+            {showPdf && <PDFViewer cv={job.cv} onClose={closePdf} />}
           </div>
-
-         
         ) : (
           <p className="text-red-500">Applicant data not found.</p>
         )}
-
-        
       </DialogContent>
     </Dialog>
-   </>
   );
 }
 
