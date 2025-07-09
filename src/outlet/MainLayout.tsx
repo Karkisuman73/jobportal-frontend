@@ -2,13 +2,11 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { Outlet } from "react-router-dom";
 import Notification from "@/components/Notificaton";
+import { useUser } from "@/context/UserContext";
 
-// ✅ Define the props type
-interface MainLayoutProps {
-  user: any; // Replace `any` with a specific type if you have one (e.g., User)
-}
+function MainLayout() {
+  const { user } = useUser();
 
-function MainLayout({ user }: MainLayoutProps) {
   return (
     <>
       <Navbar user={user} />
