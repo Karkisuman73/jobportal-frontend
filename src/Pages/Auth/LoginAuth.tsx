@@ -42,6 +42,7 @@ function Login() {
     try {
       const API = import.meta.env.VITE_API_URL;
       const response = await axios.post(`${API}/login`, save);
+      console.log("API_URL is", API);
       toast.success("Login successful");
 
       const { token, role, username, email, _id, name } = response.data;
