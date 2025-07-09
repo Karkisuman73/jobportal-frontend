@@ -15,7 +15,7 @@ interface SeekerInfo {
 }
 
 interface SeekerProfile {
-  image: string;
+  image: string | null;
 }
 
 const ProfileSeeker: React.FC = () => {
@@ -36,7 +36,11 @@ const ProfileSeeker: React.FC = () => {
           <React.Fragment key={k}>
             <div className="md:col-span-1 flex flex-col items-center text-center">
               <img
-                src={data && `${imageUrl}/${data[0]?.image}`}
+                src={
+                  data && data[0]?.image
+                    ? `${imageUrl}/${data[0].image}`
+                    : undefined
+                }
                 className="w-32 h-32 object-cover rounded-full border-4 border-indigo-300 shadow-md"
                 alt="Profile"
               />
@@ -52,7 +56,7 @@ const ProfileSeeker: React.FC = () => {
                       key={i}
                       className="bg-gray-100 text-blue-800 font-medium px-3 py-1 rounded-full text-sm"
                     >
-                      {skill}
+                      {skill.trim()}
                     </span>
                   ))}
                 </div>
@@ -93,7 +97,9 @@ const ProfileSeeker: React.FC = () => {
                   </div>
                   <div>
                     <label className="text-gray-500 text-sm">Email</label>
-                    <div className="text-lg font-medium"></div>
+                    <div className="text-lg font-medium">
+                      {/* TODO: Insert email here or handle missing email */}
+                    </div>
                   </div>
                 </div>
               </div>

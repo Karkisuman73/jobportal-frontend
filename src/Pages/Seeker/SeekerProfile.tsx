@@ -4,23 +4,21 @@ import { useUser } from "@/context/UserContext";
 import { jsPDF } from "jspdf";
 import domtoimage from "dom-to-image";
 
-// Define interface for user info (information)
 interface UserInfo {
   userId: string | number;
   jobpreference: string;
   aboutyourself: string;
   location: string;
-  skills?: string[]; // assumed array of strings, adjust if needed
+  skills?: string[];
   language?: string[];
   experiences?: string[];
   education?: string[];
-  experties?: string[];
+  expertise?: string[]; // corrected spelling here
 }
 
-// Define interface for profile image data
 interface ProfileImage {
   userId: string | number;
-  image: string;
+  image: string | null;
 }
 
 const ProfileSeeker: React.FC = () => {
@@ -32,10 +30,7 @@ const ProfileSeeker: React.FC = () => {
 
   const currentId = typeof userid === "function" ? userid() : userid;
 
-  // Type annotate parameter p as UserInfo in filter
   const userData = information?.filter((p: UserInfo) => p.userId == currentId);
-
-  // Find user profile image
   const profile = data?.find((p: ProfileImage) => p.userId == currentId);
 
   const pdfDownload = async (id: string) => {
@@ -75,7 +70,9 @@ const ProfileSeeker: React.FC = () => {
               {/* Left Column */}
               <div className="md:col-span-1 flex flex-col items-center text-center">
                 <img
-                  src={data && `${imageUrl}/${profile?.image}`}
+                  src={
+                    profile?.image ? `${imageUrl}/${profile.image}` : undefined
+                  }
                   className="w-32 h-32 object-cover rounded-full shadow-md"
                   alt="Profile"
                 />
@@ -117,12 +114,12 @@ const ProfileSeeker: React.FC = () => {
                   </h3>
                   <div>
                     {Array.isArray(result.language) &&
-                      result.language.map((exp: string, i: number) => (
+                      result.language.map((lang: string, i: number) => (
                         <div
                           key={i}
                           className="text-base flex ml-5 font-medium"
                         >
-                          {exp}
+                          {lang}
                         </div>
                       ))}
                   </div>
@@ -173,8 +170,8 @@ const ProfileSeeker: React.FC = () => {
                     Expertise
                   </h3>
                   <div className="space-y-2">
-                    {Array.isArray(result.experties) &&
-                      result.experties.map((exp: string, i: number) => (
+                    {Array.isArray(result.expertise) &&
+                      result.expertise.map((exp: string, i: number) => (
                         <div
                           key={i}
                           className="text-base flex ml-5 font-medium"

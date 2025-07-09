@@ -9,10 +9,11 @@ import React, {
 import { useNavigate } from "react-router-dom";
 
 type User = {
-  _id: string;
+ _id: string;
   name: string;
   username: string;
   email: string;
+  role?: string;
 };
 
 // Define the shape of the decoded token

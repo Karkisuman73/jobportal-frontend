@@ -1,11 +1,5 @@
-import React from 'react'
-
 const TaskManagement = () => {
-  return (
-    <div>
-      hello
-    </div>
-  )
-}
+  return <div>hello</div>;
+};
 
-export default TaskManagement
+export default TaskManagement;
