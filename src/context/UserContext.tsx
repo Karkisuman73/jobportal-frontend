@@ -9,14 +9,14 @@ import React, {
 import { useNavigate } from "react-router-dom";
 
 type User = {
- _id: string;
-  name: string;
-  username: string;
-  email: string;
+  _id?: string;
+  name?: string;
+  email?: string;
+  username?: string;
   role?: string;
+  token?: string;
 };
 
-// Define the shape of the decoded token
 type DecodedToken = {
   id: string;
   exp?: number;
@@ -51,17 +51,16 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   const logout = () => {
-    localStorage.clear();
+    localStorage.removeItem("user");
     setUser(null);
     navigate("/");
   };
 
   const userid = (): string | null => {
-    const token = localStorage.getItem("token");
-    if (!token) return null;
+    if (!user?.token) return null;
 
     try {
-      const decoded = jwtDecode<DecodedToken>(token);
+      const decoded = jwtDecode<DecodedToken>(user.token);
       return decoded.id;
     } catch (error) {
       console.error("Invalid token:", error);

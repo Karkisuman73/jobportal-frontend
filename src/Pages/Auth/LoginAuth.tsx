@@ -43,13 +43,9 @@ function Login() {
       const response = await axios.post("http://localhost:3001/login", save);
       toast.success("Login successful");
 
-      const { token, role, username, email } = response.data;
-      localStorage.setItem("token", token);
-      localStorage.setItem("username", username);
-      localStorage.setItem("role", role);
-      localStorage.setItem("email", email);
+      const { token, role, username, email, _id, name } = response.data;
 
-      login({ username, role, token });
+      login({ _id, name, email, username, role, token });
 
       const decoded = jwtDecode<DecodedToken>(token);
       console.log("Logged in as:", decoded.role);
