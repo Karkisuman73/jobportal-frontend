@@ -24,7 +24,7 @@ import Notification from "./components/Notificaton";
 
 function App() {
   const navigate = useNavigate();
-  const [user, setUser] = useState<any>(); // you can replace `any` with your actual user type/interface
+  const [user, setUser] = useState<any>(); 
   console.log("user", user);
 
   useEffect(() => {
@@ -77,7 +77,7 @@ function App() {
     <Routes>
       <Route element={<AuthLayout />} />
 
-      <Route element={<MainLayout user={user} />}>
+      <Route element={<MainLayout />}>
         <Route path="/" element={<LandingPage />} />
         <Route path="/homepage" element={<Homepage />} />
         <Route path="/note" element={<Notification />} />
