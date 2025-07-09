@@ -1,4 +1,4 @@
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import AdvanceSearch from "./components/AdvanceSearch";
 import Apply from "./components/Apply";
@@ -23,17 +23,13 @@ import Category from "./Job Category/Category";
 import Notification from "./components/Notificaton";
 
 function App() {
-  const navigate = useNavigate();
-  const [user, setUser] = useState<any>(); 
-  console.log("user", user);
+  const [setUser] = useState<any>(); // optional: move this to UserContext
 
   useEffect(() => {
     const verify = async () => {
       const token = localStorage.getItem("token");
-
       if (!token) {
         console.error("No token found");
-        navigate("/");
         return;
       }
 
@@ -50,28 +46,17 @@ function App() {
 
         if (response?.data?.user) {
           setUser(response.data.user);
-          navigate("/homepage");
+          console.log("User verified");
         } else {
           console.error("User data missing in response");
-          navigate("/");
         }
-      } catch (err: unknown) {
-        if (axios.isAxiosError(err)) {
-          console.error(
-            "Verification failed:",
-            err.response?.data || err.message
-          );
-        } else if (err instanceof Error) {
-          console.error("Verification failed:", err.message);
-        } else {
-          console.error("Verification failed with unknown error:", err);
-        }
-        navigate("/");
+      } catch (err) {
+        console.error("Verification failed:", err);
       }
     };
 
     verify();
-  }, [navigate]);
+  }, []);
 
   return (
     <Routes>
