@@ -15,6 +15,13 @@ type User = {
   email: string;
 };
 
+// Define the shape of the decoded token
+type DecodedToken = {
+  id: string;
+  exp?: number;
+  iat?: number;
+};
+
 type UserContextType = {
   user: User | null;
   login: (userData: User) => void;
@@ -45,18 +52,20 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
   const logout = () => {
     localStorage.clear();
     setUser(null);
-    // setTimeout(() => {
-    // window.location.reload();
-    //  }, 1000);
     navigate("/");
   };
 
-  const userid = () => {
+  const userid = (): string | null => {
     const token = localStorage.getItem("token");
+    if (!token) return null;
 
-    const decode = jwtDecode(token);
-    const userId = decode.id;
-    return userId;
+    try {
+      const decoded = jwtDecode<DecodedToken>(token);
+      return decoded.id;
+    } catch (error) {
+      console.error("Invalid token:", error);
+      return null;
+    }
   };
 
   return (

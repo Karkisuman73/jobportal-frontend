@@ -4,21 +4,33 @@ import Search from "../../components/Search";
 import { toast } from "react-toastify";
 import useFetchJobs from "@/utils/useFetchJobs";
 
+// Define the shape of a job item — customize fields as per your data
+interface Job {
+  _id: string;
+  position: string;
+  companyname: string;
+  view: string;
+  type: string;
+  time: string;
+  level: string;
+}
+
 const useQuery = () => {
   return new URLSearchParams(useLocation().search);
 };
 
-const Explore = () => {
+const Explore: React.FC = () => {
   const query = useQuery().get("q") || "";
   const navigate = useNavigate();
   const { data } = useFetchJobs("/joblist");
-  console.log("data", data);
 
-  const searchdata = data?.filter((item) =>
+  // data might be undefined or array of jobs
+  const searchdata = data?.filter((item: Job) =>
     item.position.toLowerCase().includes(query.toLowerCase())
   );
 
-  const handleClickButton = (_id) => {
+  // Explicitly type the _id param as string
+  const handleClickButton = (_id: string) => {
     const token = localStorage.getItem("token");
     if (!token) {
       toast.error("Please login");
@@ -31,12 +43,11 @@ const Explore = () => {
   return (
     <div className="p-4">
       <Search />
-   
 
       <div className="mt-4 space-y-5">
-        {searchdata?.map((result, i) => (
+        {searchdata?.map((result: Job, i: number) => (
           <div
-            key={i}
+            key={result._id || i}
             className="border rounded-2xl p-6 shadow-sm bg-white hover:shadow-md transition"
           >
             <div className="text-2xl font-semibold text-emerald-700">

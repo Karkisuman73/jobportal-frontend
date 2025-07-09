@@ -4,21 +4,39 @@ import { useUser } from "@/context/UserContext";
 import { jsPDF } from "jspdf";
 import domtoimage from "dom-to-image";
 
-const ProfileSeeker = () => {
-  const { data } = useFetchJobs("/SeekerProfile");
-  console.log("image",data)
-  const { data: information } = useFetchJobs("/seekerInfo");
+// Define interface for user info (information)
+interface UserInfo {
+  userId: string | number;
+  jobpreference: string;
+  aboutyourself: string;
+  location: string;
+  skills?: string[]; // assumed array of strings, adjust if needed
+  language?: string[];
+  experiences?: string[];
+  education?: string[];
+  experties?: string[];
+}
+
+// Define interface for profile image data
+interface ProfileImage {
+  userId: string | number;
+  image: string;
+}
+
+const ProfileSeeker: React.FC = () => {
+  const { data } = useFetchJobs<ProfileImage[]>("/SeekerProfile");
+  const { data: information } = useFetchJobs<UserInfo[]>("/seekerInfo");
   const { userid } = useUser();
   const username = localStorage.getItem("username");
   const email = localStorage.getItem("email");
 
   const currentId = typeof userid === "function" ? userid() : userid;
-  const userData = information?.filter((p) => p.userId == currentId);
-console.log("userData",userData)
-console.log("Current",currentId)
-const profile = data?.find((p: any) => p.userId == currentId);
-console.log("Image",profile)
-// console.log("pppp",image)
+
+  // Type annotate parameter p as UserInfo in filter
+  const userData = information?.filter((p: UserInfo) => p.userId == currentId);
+
+  // Find user profile image
+  const profile = data?.find((p: ProfileImage) => p.userId == currentId);
 
   const pdfDownload = async (id: string) => {
     const node = document.getElementById(id);
@@ -47,18 +65,18 @@ console.log("Image",profile)
   return (
     <div className="p-10 from-purple-100 to-blue-100 min-h-screen">
       <div className="max-w-5xl mx-auto space-y-8">
-        {userData?.map((result, k) => (
+        {userData?.map((result: UserInfo, k: number) => (
           <div
             key={k}
             id={`profile-${k}`}
-            className="bg-white  rounded-xl shadow-md p-8 grid md:grid-cols-3 gap-8"
+            className="bg-white rounded-xl shadow-md p-8 grid md:grid-cols-3 gap-8"
           >
             <div className="flex ml-10">
               {/* Left Column */}
-              <div className=" md:col-span-1 flex flex-col items-center text-center">
+              <div className="md:col-span-1 flex flex-col items-center text-center">
                 <img
                   src={data && `${imageUrl}/${profile?.image}`}
-                  className="w-32 h-32 object-cover rounded-full  shadow-md"
+                  className="w-32 h-32 object-cover rounded-full shadow-md"
                   alt="Profile"
                 />
                 <h2 className="mt-4 text-xl font-semibold">{username}</h2>
@@ -66,7 +84,7 @@ console.log("Image",profile)
                   {result.jobpreference}
                 </h2>
                 <p className="text-gray-600 mt-2">{result.aboutyourself}</p>
-  
+
                 <div className="mt-4 w-full">
                   <h3 className="font-medium bg-[#27384C] w-80 p-1 text-white text-lg mb-1">
                     Contact Information
@@ -76,86 +94,97 @@ console.log("Image",profile)
                     <div className="text-lg font-medium">{email}</div>
                     <div className="text-lg font-medium">{result.location}</div>
                   </div>
-  
+
                   {/* Skills */}
                   <h3 className="font-medium bg-[#27384C] w-80 p-1 text-white text-lg mt-4 mb-1">
                     Skills
                   </h3>
-                  <div className=" p-2">
+                  <div className="p-2">
                     {Array.isArray(result.skills) &&
                       result.skills.map((skill: string, i: number) => (
-                        <div key={i} className="text-base flex ml-5 font-medium">
+                        <div
+                          key={i}
+                          className="text-base flex ml-5 font-medium"
+                        >
                           {skill}
                         </div>
                       ))}
                   </div>
-  
-                  {/* Languages Placeholder */}
+
+                  {/* Languages */}
                   <h3 className="font-medium bg-[#27384C] w-80 p-1 text-white text-lg mt-4 mb-1">
                     Languages
                   </h3>
-                  <div className="">
-
-                   {Array.isArray(result.language) &&
+                  <div>
+                    {Array.isArray(result.language) &&
                       result.language.map((exp: string, i: number) => (
-                        <div key={i} className="text-base flex ml-5 font-medium">
+                        <div
+                          key={i}
+                          className="text-base flex ml-5 font-medium"
+                        >
                           {exp}
                         </div>
                       ))}
                   </div>
                 </div>
               </div>
-  
+
               {/* Right Column */}
               <div className="ml-20 mt-10 md:col-span space-y-6">
                 {/* Experience Summary */}
-                <div className="">
+                <div>
                   <h3 className="font-medium bg-[#27384C] w-100 p-1 text-white text-center text-lg mb-1">
                     Experiences
-                  </h3> 
-                  <div className=" gap-4 text-center">
-                   
+                  </h3>
+                  <div className="gap-4 text-center">
                     {Array.isArray(result.experiences) &&
                       result.experiences.map((exp: string, i: number) => (
-                        <div key={i} className="text-gray-700 flex ml-5 font-medium">
+                        <div
+                          key={i}
+                          className="text-gray-700 flex ml-5 font-medium"
+                        >
                           {exp}
                         </div>
                       ))}
-                    
-                    
                   </div>
                 </div>
-  
-                {/* Education Placeholder */}
-                <div className="">
+
+                {/* Education */}
+                <div>
                   <h3 className="font-medium bg-[#27384C] w-100 p-1 text-center text-white text-lg mb-1">
                     Education
-                  </h3> <div className="gap-4">
-                    <div>
-                      {Array.isArray(result.education)&&
-                      result.education.map((edu:string, i:number)=>(
-                        <div key={i} className=" text-gray-700 flex ml-5 font-medium">{edu}</div>
-                      ))
-  
-                      }
-                    </div>
+                  </h3>
+                  <div className="gap-4">
+                    {Array.isArray(result.education) &&
+                      result.education.map((edu: string, i: number) => (
+                        <div
+                          key={i}
+                          className="text-gray-700 flex ml-5 font-medium"
+                        >
+                          {edu}
+                        </div>
+                      ))}
                   </div>
                 </div>
-  
-                {/* Experiences */}
-                <div className="">
-                 <h3 className="font-medium bg-[#27384C] w-100 p-1 text-center text-white text-lg mb-1">
-                    Experties
-                  </h3>  <div className="space-y-2">
-                     {Array.isArray(result.experties) &&
+
+                {/* Expertise */}
+                <div>
+                  <h3 className="font-medium bg-[#27384C] w-100 p-1 text-center text-white text-lg mb-1">
+                    Expertise
+                  </h3>
+                  <div className="space-y-2">
+                    {Array.isArray(result.experties) &&
                       result.experties.map((exp: string, i: number) => (
-                        <div key={i} className="text-base flex ml-5 font-medium">
+                        <div
+                          key={i}
+                          className="text-base flex ml-5 font-medium"
+                        >
                           {exp}
                         </div>
                       ))}
                   </div>
                 </div>
-  
+
                 {/* Download Button */}
                 <button
                   onClick={() => pdfDownload(`profile-${k}`)}

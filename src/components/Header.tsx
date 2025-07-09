@@ -3,7 +3,6 @@ import { BsEmojiSmileFill } from "react-icons/bs";
 import { FaMessage } from "react-icons/fa6";
 import { FaIdCard } from "react-icons/fa";
 import { IoBagCheck } from "react-icons/io5";
-import Search from "./Search";
 const Header = () => {
   return (
     <div>

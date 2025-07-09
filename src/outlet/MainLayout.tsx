@@ -1,15 +1,9 @@
-
-import React from "react";
+// src/layouts/MainLayout.js
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { Outlet } from "react-router-dom";
-import Notification from '@/components/Notificaton';
-
-interface MainLayoutProps {
-  user?: any;
-}
-
-const MainLayout: React.FC<MainLayoutProps> = ({ user }) => {
+import Notification from "@/components/Notificaton";
+function MainLayout({ user }) {
   return (
     <>
       <Navbar user={user} />
@@ -18,6 +12,6 @@ const MainLayout: React.FC<MainLayoutProps> = ({ user }) => {
       <Footer />
     </>
   );
-};
+}
 
 export default MainLayout;
