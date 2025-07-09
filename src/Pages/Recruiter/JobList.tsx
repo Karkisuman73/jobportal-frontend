@@ -23,7 +23,8 @@ const JobList = () => {
   console.log(data);
   const fetchJobs = async () => {
     try {
-      const res = await axios.get("http://localhost:3001/joblist");
+      const API = import.meta.env.VITE_API_URL;
+      const res = await axios.get(`${API}/joblist`);
 
       setData(res.data);
     } catch (err) {

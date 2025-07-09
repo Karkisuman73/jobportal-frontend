@@ -98,7 +98,7 @@ const ProfileSeeker: React.FC = () => {
                   <div>
                     <label className="text-gray-500 text-sm">Email</label>
                     <div className="text-lg font-medium">
-                      {/* TODO: Insert email here or handle missing email */}
+                     
                     </div>
                   </div>
                 </div>

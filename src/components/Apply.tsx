@@ -44,8 +44,9 @@ const Apply: React.FC = () => {
     formData.append("jobid", _id || "");
 
     try {
+       const API = import.meta.env.VITE_API_URL;
       const response = await axios.post(
-        "http://localhost:3001/formdata",
+        `${API}/formdata`,
         formData,
         {
           headers: {

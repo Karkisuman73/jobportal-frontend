@@ -67,7 +67,8 @@ function Buttoncomponent({ id }: { id: string }) {
 
   const handleUpdate = async () => {
     try {
-      await axios.put(`http://localhost:3001/jobedit/${id}`, save);
+      const API = import.meta.env.VITE_API_URL;
+      await axios.put(`${API}/jobedit/${id}`, save);
       toast.success("Job updated successfully");
       navigate("/joblist");
     } catch (error) {

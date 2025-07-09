@@ -1,12 +1,12 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { useState, ChangeEvent } from "react";
+} from "@/components/ui/dialog"
+import  { useState, ChangeEvent } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -17,8 +17,8 @@ interface SignupData {
   role: string;
 }
 
-function Signup() {
-  const [save, setSave] = useState<SignupData>({
+ function Signup() {
+     const [save, setSave] = useState<SignupData>({
     username: "",
     email: "",
     password: "",
@@ -29,18 +29,20 @@ function Signup() {
     setSave({ ...save, [e.target.name]: e.target.value });
   };
 
-  const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSignup = async (e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const API_URL = process.env.REACT_APP_API_URL;
-      const response = await axios.post(`${API_URL}/add`, save);
+       const API = import.meta.env.VITE_API_URL;
+      const response = await axios.post(`${API}/add`, save);
       console.log(response);
       toast.success("Signup successful");
-    } catch (e: any) {
+    } catch (e:any) {
       toast.error(e.response?.data?.message || "Signup unsuccessful");
       console.error(e);
     }
   };
+
+ 
 
   return (
     <Dialog>
@@ -50,13 +52,12 @@ function Signup() {
       <DialogContent className="sm:max-w-[425px] transition-all duration-300">
         <DialogHeader>
           <DialogTitle className="text-center">Signup Form</DialogTitle>
+          
         </DialogHeader>
         {/* Signup form */}
-        <form onSubmit={handleSignup}>
+ <form onSubmit={handleSignup}>
           <div className="mb-4">
-            <label className="block mb-1 font-medium text-gray-700">
-              Username
-            </label>
+            <label className="block mb-1 font-medium text-gray-700">Username</label>
             <input
               type="text"
               name="username"
@@ -69,9 +70,7 @@ function Signup() {
           </div>
 
           <div className="mb-4">
-            <label className="block mb-1 font-medium text-gray-700">
-              Email
-            </label>
+            <label className="block mb-1 font-medium text-gray-700">Email</label>
             <input
               type="email"
               name="email"
@@ -84,9 +83,7 @@ function Signup() {
           </div>
 
           <div className="mb-4">
-            <label className="block mb-1 font-medium text-gray-700">
-              Select Role
-            </label>
+            <label className="block mb-1 font-medium text-gray-700">Select Role</label>
             <select
               name="role"
               onChange={handleInfo}
@@ -101,9 +98,7 @@ function Signup() {
           </div>
 
           <div className="mb-6">
-            <label className="block mb-1 font-medium text-gray-700">
-              Password
-            </label>
+            <label className="block mb-1 font-medium text-gray-700">Password</label>
             <input
               type="password"
               name="password"
@@ -123,9 +118,10 @@ function Signup() {
           </button>
         </form>
 
+       
         {/* Signuo FOrm */}
       </DialogContent>
     </Dialog>
-  );
+  )
 }
-export default Signup;
+export default Signup

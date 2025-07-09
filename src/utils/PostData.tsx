@@ -1,11 +1,11 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:3001";
+const API = import.meta.env.VITE_API_URL;
 
 const usePost = () => {
   const post = async (url: string, payload: any) => {
    try {
-     const res = await axios.post(`${BASE_URL}${url}`, payload);
+     const res = await axios.post(`${API}${url}`, payload);
     console.log (res.data);
    } catch (error) {
     console.log(error)

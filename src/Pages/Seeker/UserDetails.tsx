@@ -48,7 +48,8 @@ export default function App() {
     };
 
     try {
-      const response = await axios.post("http://localhost:3001/information", payload);
+      const API = import.meta.env.VITE_API_URL;
+      const response = await axios.post(`${API}/information`, payload);
       console.log(response.data);
       toast.success("Information saved successfully");
     } catch (err) {

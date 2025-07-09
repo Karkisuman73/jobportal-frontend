@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { FaLocationArrow } from "react-icons/fa";
 import { toast } from "react-toastify";
 
-// ✅ Define a type for the job items
+
 type Job = {
   _id: string;
   position: string;
@@ -16,7 +16,7 @@ type Job = {
 };
 
 const Category = () => {
-  const { data } = useFetchJobs<Job[]>("/joblist"); // Pass Job[] as the type for your data
+  const { data } = useFetchJobs<Job[]>("/joblist");
   const { path } = useParams();
   const navigate = useNavigate();
 

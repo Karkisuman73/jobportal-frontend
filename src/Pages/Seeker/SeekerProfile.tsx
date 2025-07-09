@@ -13,7 +13,7 @@ interface UserInfo {
   language?: string[];
   experiences?: string[];
   education?: string[];
-  expertise?: string[]; // corrected spelling here
+  expertise?: string[]; 
 }
 
 interface ProfileImage {

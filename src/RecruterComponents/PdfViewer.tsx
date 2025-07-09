@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/dialog"
 
 export function PdfViewer({cv,onClose}: { cv: string; onClose: () => void }) {
+   const API = import.meta.env.VITE_API_URL;
   return (
     <Dialog  open onOpenChange={onClose}>
       <DialogTrigger asChild>
@@ -17,9 +18,10 @@ export function PdfViewer({cv,onClose}: { cv: string; onClose: () => void }) {
           
         </DialogHeader>
         <div className="h-[80vh]">
-          
+         
           <iframe
-          src={`http://localhost:3001/uploads/${cv}`}
+          
+          src={`${API}/uploads/${cv}`}
           className="w-full h-full rounded-2xl"
           >
 

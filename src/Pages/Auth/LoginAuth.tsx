@@ -40,8 +40,8 @@ function Login() {
   const handleLogin = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
-      const API_URL = process.env.REACT_APP_API_URL;
-      const response = await axios.post(`${API_URL}/login`, save);
+      const API = import.meta.env.VITE_API_URL;
+      const response = await axios.post(`${API}/login`, save);
       toast.success("Login successful");
 
       const { token, role, username, email, _id, name } = response.data;

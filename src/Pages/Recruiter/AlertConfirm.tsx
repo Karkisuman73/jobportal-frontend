@@ -23,7 +23,8 @@ export function AlertDialogBox({ id }: AlertDialogBoxProps) {
     const navigate=useNavigate()
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://localhost:3001/delete/${id}`);
+      const API = import.meta.env.VITE_API_URL;
+      await axios.delete(`${API}/${id}`);
       toast.success ("Job deleted successfully");
       setTimeout(()=>{
     window.location.reload()

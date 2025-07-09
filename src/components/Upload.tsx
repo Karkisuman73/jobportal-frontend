@@ -51,8 +51,9 @@ export function Upload() {
       console.log("Uploaded file:", file);
 
       try {
+        const API = import.meta.env.VITE_API_URL;
         const response = await axios.post(
-          "http://localhost:3001/seekerprofile",
+          `${API}/seekerprofile`,
           profileData,
           {
             headers: { "Content-Type": "multipart/form-data" },
