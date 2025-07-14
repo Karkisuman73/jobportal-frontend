@@ -24,26 +24,32 @@ function ProfileImage() {
   const { logout } = useUser();
   const navigate = useNavigate();
 
-  const token = localStorage.getItem("token");
-
+  const userData = localStorage.getItem("user");
   let userId: string | null = null;
 
-  if (token) {
+  if (userData) {
     try {
-      const decoded = jwtDecode<DecodedToken>(token);
+      const parsed = JSON.parse(userData);
+      const decoded = jwtDecode<DecodedToken>(parsed.token);
       userId = decoded.id;
+      console.log("userId:", userId);
     } catch (error) {
       console.error("Invalid token", error);
     }
+  } else {
+    console.log("No user data found in localStorage");
   }
 
+  
   const userPhoto = profile?.find((p: any) => p.userId === userId);
+  console.log("Photooo",userPhoto)
 
   const LogOut = () => {
     logout();
     navigate("/");
     toast.success("User Logout successful");
   };
+
   const Seekerprofile = () => {
     navigate("/profileseeker");
   };
@@ -57,11 +63,7 @@ function ProfileImage() {
       <DropdownMenuTrigger asChild>
         <div className="w-15 aspect-square rounded-full overflow-hidden border-2 border-amber-400">
           <img
-            src={
-              profile && userPhoto
-                ? `${imageUrl}/${userPhoto.image}`
-                : undefined
-            }
+            src={userPhoto ? `${imageUrl}/${userPhoto.image}` : undefined}
             alt="Profile"
             className="h-full w-full object-cover"
           />
@@ -73,9 +75,8 @@ function ProfileImage() {
 
         <DropdownMenuItem onClick={Seekerprofile}>Profile</DropdownMenuItem>
 
-        <button>
-          <Upload />
-        </button>
+       
+        <Upload userId={userId} />
 
         <DropdownMenuItem onClick={Information}>
           Upload Information

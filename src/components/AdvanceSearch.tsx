@@ -48,12 +48,25 @@ const AdvanceSearch: React.FC = () => {
   };
 
   const handleClick = (_id: string) => {
-    const token = localStorage.getItem("token");
-    if (!token) {
+    const userData = localStorage.getItem("user");
+    if (!userData) {
       toast.error("Please login");
       navigate("/");
     } else {
-      navigate(`/details/${_id}`);
+      try {
+        const userObj = JSON.parse(userData);
+        const token = userObj.token;
+
+        if (!token) {
+          toast.error("Please login");
+          navigate("/");
+        } else {
+          navigate(`/details/${_id}`);
+        }
+      } catch {
+        toast.error("Please login");
+        navigate("/");
+      }
     }
   };
 

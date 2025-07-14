@@ -6,7 +6,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import axios from "axios";
-import { jwtDecode } from "jwt-decode";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { GrFormUpload } from "react-icons/gr";
@@ -16,38 +15,24 @@ type Inputs = {
   image: FileList;
 };
 
-interface DecodedToken {
-  id: string;
-}
-
-export function Upload() {
+export function Upload({ userId }: { userId: string | null }) {
   const { register, setValue } = useForm<Inputs>();
   const [showbox, setShowbox] = useState(false);
 
-  const token = localStorage.getItem("token");
-
-  let userId = "";
-
-  if (token) {
-    try {
-      const decoded = jwtDecode<DecodedToken>(token);
-      userId = decoded.id;
-    } catch (error) {
-      console.error("Invalid token", error);
-    }
-  } else {
-    userId = "";
-  }
-
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const fileList = e.target.files;
+    if (!userId) {
+      toast.error("User ID not found");
+      return;
+    }
+
     if (fileList && fileList.length > 0) {
       const file = fileList[0];
       setValue("image", fileList);
 
       const profileData = new FormData();
       profileData.append("image", file);
-      profileData.append("userId", userId);
+      profileData.append("userId", userId); // ✅ userId comes from prop
       console.log("Uploaded file:", file);
 
       try {

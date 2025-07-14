@@ -4,7 +4,6 @@ import Search from "../../components/Search";
 import { toast } from "react-toastify";
 import useFetchJobs from "@/utils/useFetchJobs";
 
-// Define the shape of a job item — customize fields as per your data
 interface Job {
   _id: string;
   position: string;
@@ -24,19 +23,30 @@ const Explore: React.FC = () => {
   const navigate = useNavigate();
   const { data } = useFetchJobs("/joblist");
 
-  // data might be undefined or array of jobs
   const searchdata = data?.filter((item: Job) =>
     item.position.toLowerCase().includes(query.toLowerCase())
   );
 
-  // Explicitly type the _id param as string
   const handleClickButton = (_id: string) => {
-    const token = localStorage.getItem("token");
-    if (!token) {
+    const userData = localStorage.getItem("user");
+    if (!userData) {
       toast.error("Please login");
       navigate("/");
     } else {
-      navigate(`/details/${_id}`);
+      try {
+        const userObj = JSON.parse(userData);
+        const token = userObj.token;
+
+        if (!token) {
+          toast.error("Please login");
+          navigate("/");
+        } else {
+          navigate(`/details/${_id}`);
+        }
+      } catch {
+        toast.error("Please login");
+        navigate("/");
+      }
     }
   };
 

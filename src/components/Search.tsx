@@ -13,19 +13,19 @@ const Search = () => {
 
   return (
     <div className="flex items-center justify-center">
-      <div className="flex items-center border-2 border-b-black rounded-2xl">
+      <div className="flex items-center border-2 border-b-black rounded-2xl ">
         <input
-          className="p-3 focus:outline-none"
+          className="p-3 focus:outline-none w-25  lg:w-55  "
           type="text"
-          placeholder="What are you looking for?"
+          placeholder="search..."
           onChange={(e) => setQuery(e.target.value)}
-          onKeyUp={handleSearch}
+          // onKeyUp={handleSearch}
         />
-        <input
+        {/* <input
           className="p-3 focus:outline-none border-l-2 w-40"
           type="text"
           placeholder="Enter location"
-        />
+        /> */}
         <button
           // onClick={handleSearch}
           className="bg-black text-amber-50 pl-3 h-10 mt-1 pr-3 rounded-2xl mr-2"

@@ -1,1 +1,2 @@
-export const imageUrl = "http://localhost:3001/uploads";
+const API = import.meta.env.VITE_API_URL;
+export const imageUrl = `${API}/uploads`;
