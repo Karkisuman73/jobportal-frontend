@@ -1,14 +1,15 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import  { useState, ChangeEvent } from "react";
+} from "@/components/ui/dialog";
+import { useState, ChangeEvent } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 interface SignupData {
   username: string;
@@ -17,8 +18,10 @@ interface SignupData {
   role: string;
 }
 
- function Signup() {
-     const [save, setSave] = useState<SignupData>({
+function Signup() {
+  const navigate = useNavigate();
+  const[loading, setLoading]= useState(false)
+  const [save, setSave] = useState<SignupData>({
     username: "",
     email: "",
     password: "",
@@ -29,20 +32,23 @@ interface SignupData {
     setSave({ ...save, [e.target.name]: e.target.value });
   };
 
-  const handleSignup = async (e:React.FormEvent<HTMLFormElement>) => {
+  const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const useremail = save.email;
     try {
-       const API = import.meta.env.VITE_API_URL;
+      setLoading(true)
+      const API = import.meta.env.VITE_API_URL;
       const response = await axios.post(`${API}/add`, save);
       console.log(response);
-      toast.success("Signup successful");
-    } catch (e:any) {
+      toast.success("Verification required");
+      toast.success("otp sent in email");
+      navigate("/verify",{ state: {email: useremail } });
+    } catch (e: any) {
       toast.error(e.response?.data?.message || "Signup unsuccessful");
       console.error(e);
     }
+    setLoading(false)
   };
-
- 
 
   return (
     <Dialog>
@@ -52,12 +58,13 @@ interface SignupData {
       <DialogContent className="sm:max-w-[425px] transition-all duration-300">
         <DialogHeader>
           <DialogTitle className="text-center">Signup Form</DialogTitle>
-          
         </DialogHeader>
         {/* Signup form */}
- <form onSubmit={handleSignup}>
+        <form onSubmit={handleSignup}>
           <div className="mb-4">
-            <label className="block mb-1 font-medium text-gray-700">Username</label>
+            <label className="block mb-1 font-medium text-gray-700">
+              Username
+            </label>
             <input
               type="text"
               name="username"
@@ -70,7 +77,9 @@ interface SignupData {
           </div>
 
           <div className="mb-4">
-            <label className="block mb-1 font-medium text-gray-700">Email</label>
+            <label className="block mb-1 font-medium text-gray-700">
+              Email
+            </label>
             <input
               type="email"
               name="email"
@@ -83,7 +92,9 @@ interface SignupData {
           </div>
 
           <div className="mb-4">
-            <label className="block mb-1 font-medium text-gray-700">Select Role</label>
+            <label className="block mb-1 font-medium text-gray-700">
+              Select Role
+            </label>
             <select
               name="role"
               onChange={handleInfo}
@@ -98,7 +109,9 @@ interface SignupData {
           </div>
 
           <div className="mb-6">
-            <label className="block mb-1 font-medium text-gray-700">Password</label>
+            <label className="block mb-1 font-medium text-gray-700">
+              Password
+            </label>
             <input
               type="password"
               name="password"
@@ -114,14 +127,13 @@ interface SignupData {
             type="submit"
             className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 rounded-lg transition duration-200"
           >
-            Sign Up
+           {loading ? "signing up..": "signup"}
           </button>
         </form>
 
-       
         {/* Signuo FOrm */}
       </DialogContent>
     </Dialog>
-  )
+  );
 }
-export default Signup
+export default Signup;

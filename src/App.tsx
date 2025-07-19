@@ -21,6 +21,7 @@ import ProfileSeeker from "./Pages/Seeker/SeekerProfile";
 import UserDetails from "./Pages/Seeker/UserDetails";
 import Category from "./Job Category/Category";
 import Notification from "./components/Notificaton";
+import Verify from "./Pages/Auth/Verify";
 
 function App() {
   const [setUser] = useState<any>(); // optional: move this to UserContext
@@ -34,7 +35,7 @@ function App() {
       }
 
       try {
-       const API = import.meta.env.VITE_API_URL;
+        const API = import.meta.env.VITE_API_URL;
         const response = await axios.post(
           `${API}/verify`,
           {},
@@ -62,9 +63,11 @@ function App() {
   return (
     <Routes>
       <Route element={<AuthLayout />} />
+      <Route path="/verify" element={<Verify />} />
 
       <Route element={<MainLayout />}>
         <Route path="/" element={<LandingPage />} />
+
         <Route path="/homepage" element={<Homepage />} />
         <Route path="/note" element={<Notification />} />
         <Route path="/explore" element={<Explore />} />
