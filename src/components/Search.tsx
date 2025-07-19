@@ -19,7 +19,7 @@ const Search = () => {
           type="text"
           placeholder="search..."
           onChange={(e) => setQuery(e.target.value)}
-          // onKeyUp={handleSearch}
+          onKeyUp={handleSearch}
         />
         {/* <input
           className="p-3 focus:outline-none border-l-2 w-40"

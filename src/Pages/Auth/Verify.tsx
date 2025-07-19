@@ -19,7 +19,7 @@ const Verify: React.FC = () => {
       const API = import.meta.env.VITE_API_URL;
       const { data } = await axios.post(`${API}/verifyotp`, { email, code });
 
-      toast.success( "Verification successful");
+      toast.success(data?.message|| "Verification successful");
       navigate("/");
     } catch (err: any) {
       toast.error( "Verification failed");
